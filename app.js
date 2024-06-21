@@ -1,5 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
+const hotelRouter = require('./routes/hotelRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
@@ -27,80 +29,6 @@ const hotels = [
   },
 ];
 
-//2)Route handlers
-const getAllHotels = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    results: hotels.length,
-    data: { hotels: hotels },
-  });
-};
-
-const getHotel = (req, res) => {
-  console.log(req.params);
-  res.status(200).json({ status: 'success', data: {} });
-};
-
-const createHotel = (req, res) => {
-  console.log(req.body);
-  res.send('Done');
-};
-
-const updateHotel = (req, res) => {
-  console.log(`Updated hotel`);
-  const hotelId = req.params.id;
-  res.status(200).json({
-    status: 'success',
-    data: {
-      hotel: '<Updated hotel here>',
-    },
-  });
-};
-
-const deleteHotel = (req, res) => {
-  console.log(`deleted hotel`);
-  const hotelId = req.params.id;
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
-};
-
-const getAllUsers = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
-
-const getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
-
-const createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
-
-const updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
-
-const deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
-};
-
 // app.get('/api/v1/hotels', getAllHotels);
 // app.get('/api/v1/hotels/:id', getHotel);
 // app.post('/api/v1/hotels', createHotel);
@@ -109,23 +37,8 @@ const deleteUser = (req, res) => {
 
 //3) Routes
 
-app.route('/api/v1/hotels').get(getAllHotels).post(createHotel);
-app
-  .route('/api/v1/hotels/:id')
-  .get(getHotel)
-  .patch(updateHotel)
-  .delete(deleteHotel);
+//this is called "mounting the router"
+app.use('/api/v1/hotels', hotelRouter);
+app.use('/api/v1/users', userRouter);
 
-app.route('/api/v1/users').get(getAllUsers).post(createUser);
-app
-  .route('/api/v1/users/:id')
-  .get(getUser)
-  .patch(updateUser)
-  .delete(deleteUser);
-
-//4) Start server
-const port = 3000;
-
-app.listen(port, () => {
-  console.log(`App running on port: ${port}`);
-});
+module.exports = app;
