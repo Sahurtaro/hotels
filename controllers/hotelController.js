@@ -20,6 +20,19 @@ const hotels = [
   },
 ];
 
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.city) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Missing hotel name or hotel city',
+    });
+  }
+  console.log(
+    `This is the hotel's name: ${req.body.name}, and the hotel's city: ${req.body.city}`
+  );
+  next();
+};
+
 exports.checkID = (req, res, next, val) => {
   console.log(`Hotel id is:${val}`);
 
