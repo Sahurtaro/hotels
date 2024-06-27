@@ -6,9 +6,11 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 //1) Middlewares
-if ((process.env.NODE_ENV = 'development')) {
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'development') {
   app.use(morgan('tiny'));
 }
+
 app.use(express.json()); //the data from the boddy is added to the request object using this middleware
 
 // app.get('/api/v1/hotels', getAllHotels);
