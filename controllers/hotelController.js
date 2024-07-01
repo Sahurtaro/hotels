@@ -24,7 +24,19 @@ const Hotel = require('./../models/hotelModel');
 
 exports.getAllHotels = async (req, res) => {
   try {
-    const hotels = await Hotel.find();
+    //Build query
+    const queryObj = { ...req.query };
+
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    const query = Hotel.find(queryObj);
+
+    //Execute query
+    const hotels = await query;
+
+    //Send response
     res.status(200).json({
       status: 'success',
       results: hotels.length,
