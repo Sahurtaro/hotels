@@ -1,83 +1,105 @@
+const Hotel = require('./../models/hotelModel');
+
 //Route handlers
 
-const hotels = [
-  {
-    id: 1,
-    name: 'Hotel1',
-    region: 'suroccidente',
-    city: 'cali',
-    zone: 'centro',
-    category: 'hotel',
-    stars: 4,
-    type: 'urbano',
-    web: 'hotel1.com',
-    image: 'www.imagen.png',
-    address: 'calle 1 con carrera 2 num 123',
-    location: {
-      lat: 424,
-      lng: 963,
-    },
-  },
-];
+// const hotels = [
+//   {
+//     id: 1,
+//     name: 'Hotel1',
+//     region: 'suroccidente',
+//     city: 'cali',
+//     zone: 'centro',
+//     category: 'hotel',
+//     stars: 4,
+//     type: 'urbano',
+//     web: 'hotel1.com',
+//     image: 'www.imagen.png',
+//     address: 'calle 1 con carrera 2 num 123',
+//     location: {
+//       lat: 424,
+//       lng: 963,
+//     },
+//   },
+// ];
 
-exports.checkBody = (req, res, next) => {
-  if (!req.body.name || !req.body.city) {
-    return res.status(400).json({
+exports.getAllHotels = async (req, res) => {
+  try {
+    const hotels = await Hotel.find();
+    res.status(200).json({
+      status: 'success',
+      results: hotels.length,
+      data: { hotels },
+    });
+  } catch (err) {
+    res.status(404).json({
       status: 'fail',
-      message: 'Missing hotel name or hotel city',
+      message: err,
     });
   }
-  console.log(
-    `This is the hotel's name: ${req.body.name}, and the hotel's city: ${req.body.city}`
-  );
-  next();
 };
 
-exports.checkID = (req, res, next, val) => {
-  console.log(`Hotel id is:${val}`);
-
-  if (req.params.id * 1 > hotels.length) {
-    return res.status(404).json({
+exports.getHotel = async (req, res) => {
+  try {
+    const hotel = await Hotel.findById(req.params.id);
+    res.status(200).json({ status: 'success', data: { hotel } });
+  } catch (error) {
+    res.status(404).json({
       status: 'fail',
-      message: 'Invalid ID',
+      message: err,
     });
   }
-  next();
 };
 
-exports.getAllHotels = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    results: hotels.length,
-    data: { hotels: hotels },
-  });
+exports.createHotel = async (req, res) => {
+  try {
+    const newHotel = await Hotel.create(req.body);
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        hotel: newHotel,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Invalid data sent!',
+    });
+  }
 };
 
-exports.getHotel = (req, res) => {
-  console.log(req.params);
-  res.status(200).json({ status: 'success', data: {} });
+exports.updateHotel = async (req, res) => {
+  try {
+    const hotel = await Hotel.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        hotel,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Invalid data sent!',
+    });
+  }
 };
 
-exports.createHotel = (req, res) => {
-  console.log(req.body);
-  res.send('Done');
-};
-
-exports.updateHotel = (req, res) => {
-  console.log(`Updated hotel`);
-  const hotelId = req.params.id;
-  res.status(200).json({
-    status: 'success',
-    data: {
-      hotel: '<Updated hotel here>',
-    },
-  });
-};
-
-exports.deleteHotel = (req, res) => {
-  this.checkID(req, res, next, val);
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+exports.deleteHotel = async (req, res) => {
+  try {
+    await Hotel.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };

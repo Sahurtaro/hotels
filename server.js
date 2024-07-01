@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const app = require('./app');
+
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 
@@ -17,25 +19,6 @@ mongoose
   .then(() => {
     console.log('DB connection successful!');
   });
-
-const app = require('./app');
-
-const hotelSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'A hotel must have a name'],
-  },
-  city: String,
-  region: String,
-  zone: String,
-  category: String,
-  type: String,
-  web: String,
-  image: String,
-  address: String,
-  location: String,
-});
-const Hotel = mongoose.model('Hotel', hotelSchema);
 
 // Start server
 const port = process.env.PORT || 3000;
