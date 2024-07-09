@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const hotelRouter = require('./routes/hotelRoutes');
 const userRouter = require('./routes/userRoutes');
+const trainingRouter = require('./routes/trainingRoutes');
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use(express.json()); //the data from the boddy is added to the request objec
 //this is called "mounting the router"
 app.use('/api/v1/hotels', hotelRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/trainings', trainingRouter);
 
 module.exports = app;

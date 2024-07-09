@@ -17,8 +17,9 @@ const trainingSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
+    default: Date.now(),
   },
-  default: Date.now(),
+
   city: {
     type: String,
     required: [true, 'A training must have a city'],
