@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const hotelRouter = require('./routes/hotelRoutes');
 const userRouter = require('./routes/userRoutes');
 const trainingRouter = require('./routes/trainingRoutes');
+const providerRouter = require('./routes/providerRoutes');
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use(express.json()); //the data from the boddy is added to the request objec
 app.use('/api/v1/hotels', hotelRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/trainings', trainingRouter);
+app.use('/api/v1/providers', providerRouter);
 
 module.exports = app;
