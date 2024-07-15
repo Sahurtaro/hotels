@@ -5,6 +5,7 @@ const userRouter = require('./routes/userRoutes');
 const trainingRouter = require('./routes/trainingRoutes');
 const providerRouter = require('./routes/providerRoutes');
 const destinationRouter = require('./routes/destinationRoutes');
+const pilarRouter = require('./routes/pilarRoutes');
 
 const app = express();
 
@@ -30,5 +31,6 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/trainings', trainingRouter);
 app.use('/api/v1/providers', providerRouter);
 app.use('/api/v1/destinations', destinationRouter);
+app.use('/api/v1/pilars', pilarRouter);
 
 module.exports = app;

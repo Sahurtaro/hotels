@@ -1,21 +1,21 @@
-const Hotel = require('./../models/hotelModel');
+const Pilar = require('./../models/pilarModel');
 const APIFeatures = require('./../utils/apiFeatures');
 
-exports.getAllHotels = async (req, res) => {
+exports.getAllPilars = async (req, res) => {
   try {
     //Execute query
-    const features = new APIFeatures(Hotel.find(), req.query)
+    const features = new APIFeatures(Pilar.find(), req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
-    const hotels = await features.query;
+    const pilars = await features.query;
 
     //Send response
     res.status(200).json({
       status: 'success',
-      results: hotels.length,
-      data: { hotels },
+      results: pilars.length,
+      data: { pilars },
     });
   } catch (err) {
     res.status(404).json({
@@ -25,10 +25,10 @@ exports.getAllHotels = async (req, res) => {
   }
 };
 
-exports.getHotel = async (req, res) => {
+exports.getPilar = async (req, res) => {
   try {
-    const hotel = await Hotel.findById(req.params.id);
-    res.status(200).json({ status: 'success', data: { hotel } });
+    const pilar = await Pilar.findById(req.params.id);
+    res.status(200).json({ status: 'success', data: { pilar } });
   } catch (error) {
     res.status(404).json({
       status: 'fail',
@@ -37,14 +37,14 @@ exports.getHotel = async (req, res) => {
   }
 };
 
-exports.createHotel = async (req, res) => {
+exports.createPilar = async (req, res) => {
   try {
-    const newHotel = await Hotel.create(req.body);
+    const newPilar = await Pilar.create(req.body);
 
     res.status(201).json({
       status: 'success',
       data: {
-        hotel: newHotel,
+        hotel: newPilar,
       },
     });
   } catch (err) {
@@ -55,9 +55,9 @@ exports.createHotel = async (req, res) => {
   }
 };
 
-exports.updateHotel = async (req, res) => {
+exports.updatePilar = async (req, res) => {
   try {
-    const hotel = await Hotel.findByIdAndUpdate(req.params.id, req.body, {
+    const pilar = await Pilar.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -65,7 +65,7 @@ exports.updateHotel = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
-        hotel,
+        pilar,
       },
     });
   } catch (err) {
@@ -76,9 +76,9 @@ exports.updateHotel = async (req, res) => {
   }
 };
 
-exports.deleteHotel = async (req, res) => {
+exports.deletePilar = async (req, res) => {
   try {
-    await Hotel.findByIdAndDelete(req.params.id);
+    await Pilar.findByIdAndDelete(req.params.id);
     res.status(204).json({
       status: 'success',
       data: null,
