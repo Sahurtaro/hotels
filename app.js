@@ -8,6 +8,8 @@ const destinationRouter = require('./routes/destinationRoutes');
 const pilarRouter = require('./routes/pilarRoutes');
 const directorRouter = require('./routes/directorRoutes');
 
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 
 //1) Middlewares
@@ -30,20 +32,9 @@ app.use('/api/v1/pilars', pilarRouter);
 app.use('/api/v1/directors', directorRouter);
 
 app.all('*', (req, res, next) => {
-  res.status(404).json({
-    status: 'fail',
-    message: `Cant find ${req.originalUrl} on this server`,
-  });
+  next(new AppError(`Cant find ${req.originalUrl} on this server`), 404);
 });
 
-app.use((err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-  });
-});
+app.use(globalErrorHandler);
 
 module.exports = app;

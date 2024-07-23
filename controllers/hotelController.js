@@ -1,92 +1,87 @@
 const Hotel = require('./../models/hotelModel');
 const APIFeatures = require('./../utils/apiFeatures');
+const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
-exports.getAllHotels = async (req, res) => {
-  try {
-    //Execute query
-    const features = new APIFeatures(Hotel.find(), req.query)
-      .filter()
-      .sort()
-      .limitFields()
-      .paginate();
-    const hotels = await features.query;
+exports.getAllHotels = catchAsync(async (req, res, next) => {
+  //Execute query
+  const features = new APIFeatures(Hotel.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const hotels = await features.query;
 
-    //Send response
-    res.status(200).json({
-      status: 'success',
-      results: hotels.length,
-      data: { hotels },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
+  //Send response
+  res.status(200).json({
+    status: 'success',
+    results: hotels.length,
+    data: { hotels },
+  });
+});
+
+exports.getHotel = catchAsync(async (req, res, next) => {
+  const hotel = await Hotel.findById(req.params.id, (err) => {
+    if (err) {
+      return next(new AppError(`No valid ID ${req.params.id}`, 404));
+    }
+  });
+
+  if (!hotel) {
+    return next(
+      new AppError(`No hotel found with that ID ${req.params.id}`, 404),
+    );
   }
-};
+  res.status(200).json({ status: 'success', data: { hotel } });
+});
 
-exports.getHotel = async (req, res) => {
-  try {
-    const hotel = await Hotel.findById(req.params.id);
-    res.status(200).json({ status: 'success', data: { hotel } });
-  } catch (error) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+exports.createHotel = catchAsync(async (req, res, next) => {
+  const newHotel = await Hotel.create(req.body);
 
-exports.createHotel = async (req, res) => {
-  try {
-    const newHotel = await Hotel.create(req.body);
+  res.status(201).json({
+    status: 'success',
+    data: {
+      hotel: newHotel,
+    },
+  });
+});
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        hotel: newHotel,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: 'Invalid data sent!',
-    });
-  }
-};
-
-exports.updateHotel = async (req, res) => {
-  try {
-    const hotel = await Hotel.findByIdAndUpdate(req.params.id, req.body, {
+exports.updateHotel = catchAsync(async (req, res, next) => {
+  const hotel = await Hotel.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
       new: true,
       runValidators: true,
-    });
+    },
+    (err) => {
+      if (err) {
+        return next(new AppError(`No valid ID ${req.params.id}`, 404));
+      }
+    },
+  );
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        hotel,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: 'Invalid data sent!',
-    });
+  if (!hotel) {
+    return next(new AppError('No hotel found with that ID', 404));
   }
-};
 
-exports.deleteHotel = async (req, res) => {
-  try {
-    await Hotel.findByIdAndDelete(req.params.id);
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err,
-    });
+  res.status(200).json({
+    status: 'success',
+    data: {
+      hotel,
+    },
+  });
+});
+
+exports.deleteHotel = catchAsync(async (req, res, next) => {
+  const hotel = await Hotel.findByIdAndDelete(req.params.id);
+
+  if (!hotel) {
+    return next(new AppError('No hotel found with that ID', 404));
   }
-};
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
