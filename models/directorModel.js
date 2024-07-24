@@ -21,7 +21,7 @@ const directorSchema = new mongoose.Schema({
       'A board director city must have less or equal than 40 characters',
     ],
     minlength: [
-      10,
+      4,
       'A board director city must have more or equal than 10 characters',
     ],
   },
