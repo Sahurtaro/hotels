@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const hotelRouter = require('./routes/hotelRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -46,10 +47,15 @@ app.use(mongoSanitize());
 //Data sanitization against XSS
 app.use(xss());
 
-//3) Routes
+//Prevent parameter pollution
+app.use;
+hpp({
+  whitelist: ['duration', 'category', 'zone', 'region'],
+}),
+  //3) Routes
 
-//this is called "mounting the router"
-app.use('/api/v1/hotels', hotelRouter);
+  //this is called "mounting the router"
+  app.use('/api/v1/hotels', hotelRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/trainings', trainingRouter);
 app.use('/api/v1/providers', providerRouter);
