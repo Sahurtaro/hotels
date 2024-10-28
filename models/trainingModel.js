@@ -5,13 +5,13 @@ const trainingSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A training must have a name'],
     maxlength: [60, 'A training name must have less or equal to 60 characters'],
-    minlength: [10, 'A training name must have at least 10 characters'],
+    minlength: [5, 'A training name must have at least 10 characters'],
   },
   image: {
     type: [String],
     required: [true, 'A training must have an image'],
   },
-  registartionLink: {
+  registrationLink: {
     type: String,
     required: [true],
   },
@@ -24,7 +24,7 @@ const trainingSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A training must have a city'],
     maxlength: [30, 'A training city must have 30 characters or less'],
-    minlength: [10, 'A training city must have at least 10 characters'],
+    minlength: [4, 'A training city must have at least 10 characters'],
   },
   region: {
     type: String,
