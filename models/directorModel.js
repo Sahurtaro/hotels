@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const directorSchema = new mongoose.Schema({
-  hotelName: {
+  name: {
     type: String,
     required: [true, 'A board director needs a name'],
     maxlength: [
@@ -13,6 +13,7 @@ const directorSchema = new mongoose.Schema({
       'A board director name must have more or equal than 10 characters',
     ],
   },
+
   city: {
     type: String,
     required: [true, 'A board director needs a city'],
@@ -21,7 +22,7 @@ const directorSchema = new mongoose.Schema({
       'A board director city must have less or equal than 40 characters',
     ],
     minlength: [
-      10,
+      4,
       'A board director city must have more or equal than 10 characters',
     ],
   },
